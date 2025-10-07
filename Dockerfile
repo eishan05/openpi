@@ -58,9 +58,8 @@ RUN /.venv/bin/python -c "import transformers; print(transformers.__file__)" | x
 # Customize with: --build-arg CHECKPOINT_PATH=gs://.../your_model
 # ------------------------------------------------------------
 ARG CHECKPOINT_PATH=gs://openpi-assets/checkpoints/pi05_libero
-ENV OPENPI_DATA_HOME=/opt/openpi-cache
 ENV CHECKPOINT_PATH=${CHECKPOINT_PATH}
-RUN mkdir -p "$OPENPI_DATA_HOME" && /.venv/bin/python scripts/predownload_checkpoint.py
+RUN /.venv/bin/python scripts/predownload_checkpoint.py
 
 # Default listening port; overridable at runtime via `-e PORT=...`.
 ENV PORT=8000
