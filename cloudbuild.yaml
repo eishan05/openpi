@@ -14,8 +14,8 @@ options:
 substitutions:
   # Adjust these to your Artifact Registry setup (repository must exist)
   _REGION: us-central1
-  _REPOSITORY: openpi
-  _IMAGE_NAME: openpi-server
+  _REPOSITORY: cloud-run-gpu-images
+  _IMAGE_NAME: openpi-server-libero
   _TAG: $SHORT_SHA
 
 steps:
