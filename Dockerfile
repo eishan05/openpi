@@ -60,26 +60,7 @@ RUN /.venv/bin/python -c "import transformers; print(transformers.__file__)" | x
 ARG CHECKPOINT_PATH=gs://openpi-assets/checkpoints/pi05_libero
 ENV OPENPI_DATA_HOME=/opt/openpi-cache
 ENV CHECKPOINT_PATH=${CHECKPOINT_PATH}
-RUN mkdir -p "$OPENPI_DATA_HOME" && \
-    /.venv/bin/python - <<'PY'
-import os
-import sys
-import traceback
-import openpi.shared.download as download
-
-url = os.environ.get('CHECKPOINT_PATH', 'gs://openpi-assets/checkpoints/pi05_libero')
-print(f"[openpi] Pre-downloading checkpoint: {url}")
-try:
-    path = download.maybe_download(url)
-except Exception as e:
-    print(f"[openpi] Standard download failed: {e}. Retrying as anonymous...")
-    try:
-        path = download.maybe_download(url, gs={"token": "anon"})
-    except Exception:
-        traceback.print_exc()
-        raise
-print(f"[openpi] Checkpoint cached at: {path}")
-PY
+RUN mkdir -p "$OPENPI_DATA_HOME" && /.venv/bin/python scripts/predownload_checkpoint.py
 
 # Default listening port; overridable at runtime via `-e PORT=...`.
 ENV PORT=8000
