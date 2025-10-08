@@ -17,6 +17,7 @@ substitutions:
   _REPOSITORY: cloud-run-gpu-images
   _IMAGE_NAME: openpi-server-libero
   _TAG: $SHORT_SHA
+  _SERVICE: openpi-server-libero
 
 steps:
   - id: 'Build image'
@@ -34,6 +35,20 @@ steps:
     args:
       - push
       - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE_NAME}:${_TAG}
+
+  - id: 'Deploy to Cloud Run'
+    name: 'gcr.io/cloud-builders/gcloud'
+    waitFor: ['Push image']
+    env: ['CLOUDSDK_CORE_DISABLE_PROMPTS=1']
+    args:
+      - run
+      - deploy
+      - ${_SERVICE}
+      - --image=${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE_NAME}:${_TAG}
+      - --region=${_REGION}
+      - --platform=managed
+      - --revision-suffix=${_TAG}
+      - --quiet
 
 images:
   - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE_NAME}:${_TAG}
