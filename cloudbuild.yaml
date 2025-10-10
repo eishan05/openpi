@@ -5,10 +5,13 @@
 timeout: '3600s'  # Increase if your build still needs more time
 
 options:
-  # Bigger machine speeds up apt/uv installs significantly vs default e2-medium
-  machineType: 'E2_HIGHCPU_8'
-  # Increase disk if the image layers or dependency downloads are large
-  diskSizeGb: 200
+  # Using free tier: n1-standard-1 (1 vCPU, 3.75 GB memory)
+  # Note: Build will be slower but won't incur charges beyond free tier limits
+  # machineType: 'E2_HIGHCPU_8'  # Uncomment for faster builds (charged)
+
+  # Reduced disk size for free tier (default is 10GB, max free is typically 10-100GB)
+  # diskSizeGb: 200  # Uncomment if you need more space (may incur charges)
+  diskSizeGb: 100
   logging: CLOUD_LOGGING_ONLY
 
 substitutions:
